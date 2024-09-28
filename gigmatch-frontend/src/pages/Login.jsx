@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import React from 'react';
 import { Form, Input, Button, Typography, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
@@ -11,10 +10,10 @@ const { Title } = Typography;
 function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
-
+  
   const onFinish = async (values) => {
     try {
-      const response = await fetch('http://localhost:3000/login', {
+      const response = await fetch('http://localhost:4003/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,8 +23,10 @@ function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        login(data.token);
-        message.success('Login successful');
+        login({
+          token: data.accessToken,
+          userType: data.userType,
+        });
         navigate('/dashboard');
       } else {
         message.error('Invalid credentials');

@@ -1,8 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, Typography, Select, message } from 'antd';
-import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import '../styles/Register.css';
 
 const { Title } = Typography;
@@ -10,11 +9,10 @@ const { Option } = Select;
 
 function Register() {
   const navigate = useNavigate();
-  const { login } = useAuth();
 
   const onFinish = async (values) => {
     try {
-      const response = await fetch('http://localhost:3000/register', {
+      const response = await fetch('http://localhost:4003/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,23 +22,7 @@ function Register() {
 
       if (response.ok) {
         message.success('Registration successful!');
-        // Automatically log in the user after successful registration
-        const loginResponse = await fetch('http://localhost:3000/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: values.username,
-            password: values.password,
-          }),
-        });
-
-        if (loginResponse.ok) {
-          const data = await loginResponse.json();
-          login(data.token);
-          navigate('/dashboard');
-        }
+        navigate('/login');
       } else {
         message.error('Registration failed. Please try again.');
       }
@@ -81,12 +63,6 @@ function Register() {
             prefix={<LockOutlined className="site-form-item-icon" />}
             placeholder="Password"
           />
-        </Form.Item>
-        <Form.Item
-          name="phone"
-          rules={[{ required: true, message: 'Please input your Phone number!' }]}
-        >
-          <Input prefix={<PhoneOutlined className="site-form-item-icon" />} placeholder="Phone" />
         </Form.Item>
         <Form.Item
           name="userType"

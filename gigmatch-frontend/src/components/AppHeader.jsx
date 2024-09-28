@@ -1,10 +1,8 @@
-// src/components/AppHeader.jsx
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { Layout, Menu, Button } from 'antd';
-import { HomeOutlined, UserOutlined, LoginOutlined, LogoutOutlined } from '@ant-design/icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { HomeOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useAuth } from '../contexts/AuthContext';
-import '../styles/Header.css';
 
 const { Header } = Layout;
 
@@ -14,37 +12,33 @@ function AppHeader() {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate('/login');
   };
 
   return (
     <Header className="header">
-      <div className="logo">
-        <Link to="/">GigMatch</Link>
-      </div>
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-        <Menu.Item key="1" icon={<HomeOutlined />}>
+      <div className="logo" />
+      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['home']}>
+        <Menu.Item key="home" icon={<HomeOutlined />}>
           <Link to="/">Home</Link>
         </Menu.Item>
         {user ? (
           <>
-            <Menu.Item key="2" icon={<UserOutlined />}>
+            <Menu.Item key="dashboard" icon={<UserOutlined />}>
               <Link to="/dashboard">Dashboard</Link>
             </Menu.Item>
-            <Button 
-              icon={<LogoutOutlined />} 
-              onClick={handleLogout}
-              style={{ marginLeft: 'auto' }}
-            >
-              Logout
-            </Button>
+            <Menu.Item key="logout">
+              <Button type="link" icon={<LogoutOutlined />} onClick={handleLogout}>
+                Logout
+              </Button>
+            </Menu.Item>
           </>
         ) : (
           <>
-            <Menu.Item key="3" icon={<LoginOutlined />}>
+            <Menu.Item key="login">
               <Link to="/login">Login</Link>
             </Menu.Item>
-            <Menu.Item key="4" icon={<UserOutlined />}>
+            <Menu.Item key="register">
               <Link to="/register">Register</Link>
             </Menu.Item>
           </>
