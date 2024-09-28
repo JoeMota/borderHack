@@ -1,0 +1,13 @@
+.dashboard-layout {
+    height: 100%;
+  }
+  
+  .dashboard-sider {
+    background: #fff;
+  }
+  
+  .dashboard-content {
+    padding: 24px;
+    margin: 0;
+    min-height: 280px;
+  }

@@ -1,8 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Layout } from 'antd';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import AppHeader from './components/AppHeader';
+import AppFooter from './components/AppFooter';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -15,18 +15,18 @@ function App() {
   return (
     <Router>
       <Layout className="layout">
-        <Header />
+        <AppHeader />
         <Content style={{ padding: '0 50px', marginTop: 64 }}>
           <div className="site-layout-content">
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route path="/login" component={Login} />
-              <Route path="/register" component={Register} />
-              <Route path="/dashboard" component={Dashboard} />
-            </Switch>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Routes>
           </div>
         </Content>
-        <Footer />
+        <AppFooter />
       </Layout>
     </Router>
   );
