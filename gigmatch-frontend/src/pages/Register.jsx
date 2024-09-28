@@ -1,15 +1,53 @@
 import React from 'react';
-import { Form, Input, Button, Typography, Select } from 'antd';
+import { Form, Input, Button, Typography, Select, message } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import '../styles/Register.css';
 
 const { Title } = Typography;
 const { Option } = Select;
 
 function Register() {
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-    // Here you would typically send a request to your backend to register the user
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const onFinish = async (values) => {
+    try {
+      const response = await fetch('http://localhost:3000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (response.ok) {
+        message.success('Registration successful!');
+        // Automatically log in the user after successful registration
+        const loginResponse = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: values.username,
+            password: values.password,
+          }),
+        });
+
+        if (loginResponse.ok) {
+          const data = await loginResponse.json();
+          login(data.token);
+          navigate('/dashboard');
+        }
+      } else {
+        message.error('Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      message.error('An error occurred during registration');
+    }
   };
 
   return (
@@ -55,8 +93,8 @@ function Register() {
           rules={[{ required: true, message: 'Please select a user type!' }]}
         >
           <Select placeholder="Select user type">
-            <Option value="worker">Worker</Option>
             <Option value="employer">Employer</Option>
+            <Option value="employee">Employee</Option>
           </Select>
         </Form.Item>
         <Form.Item>

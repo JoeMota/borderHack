@@ -1,14 +1,39 @@
+// src/pages/Login.jsx
 import React from 'react';
-import { Form, Input, Button, Typography } from 'antd';
+import { Form, Input, Button, Typography, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import '../styles/Login.css';
 
 const { Title } = Typography;
 
 function Login() {
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-    // Here you would typically send a request to your backend to authenticate the user
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const onFinish = async (values) => {
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        login(data.token);
+        message.success('Login successful');
+        navigate('/dashboard');
+      } else {
+        message.error('Invalid credentials');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      message.error('An error occurred during login');
+    }
   };
 
   return (
